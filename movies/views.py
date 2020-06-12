@@ -7,7 +7,18 @@ import json
 from django.shortcuts import render, redirect
 from .models import Movie, Genre, Actor, Director, Review
 
+# rest_framework
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import MovieSerializer
+
 # Create your views here.
+@api_view(['GET'])
+def index(request):
+    movies = Movie.objects.all()
+    serializer = MovieSerializer(Movie, many=True)
+    return Response(serializer.data)
+
 class scrap(request):
     lang = 'ko-KR'
     TMDB_KEY = 'f790c6911bd5abe1dd9098d76849459f' # -- 나중에 환경변수로 사용하자!!!
@@ -109,7 +120,7 @@ class scrap(request):
             # 이미 존재하는 영화는 추가되지 않음
             if Movie.objects.filter(title=title, release_date=release_date).exists():
                 continue
-                    
+
             # movies.genres | ManyToMany add
             genre_list = tmp_movie['genre_ids']
             for genre_num in genre_list:
