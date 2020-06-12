@@ -12,10 +12,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import MovieSerializer
 
-lang = 'ko-KR'
-TMDB_KEY = '752946192e58cc2348b96b6bcac28ede' # -- 나중에 환경변수로 사용하자!!!
+from decouple import config
 
-# Create your views here.
+lang = 'ko-KR'
+TMDB_KEY = config("TMDB_KEY")
+
+
 @api_view(['GET'])
 def index(request):
     movies = Movie.objects.all()
@@ -34,10 +36,9 @@ def get_json_data(page):
 # 2-0) 배우 이름 바꿔주기 | Actor name (en -> ko)
 def en_to_kr(cname):
     papago_url = 'https://openapi.naver.com/v1/papago/detectLangs'
-    
-    # 나중에 환경변수로 설정하기!!
-    client_id = "7PbRNqLKFMd89FkSeyYc" # 개발자센터에서 발급받은 Client ID 값
-    client_secret = "9AUqjaYtKA" # 개발자센터에서 발급받은 Client Secret 값
+
+    client_id = config("CLIENT_ID")
+    client_secret = config("CLIENT_SECRET")
 
     encText = urllib.parse.quote(cname)
     data = "source=en&target=ko&text=" + encText
@@ -76,8 +77,6 @@ def get_actors_and_directors(movie_id):
             director_list.append(en_to_kr(crew['name']))
     return {'cast_data':cast_list, 'directors': director_list}
 
-
-from pprint import pprint as pp
 
 def scrap(request):    
     global TMDB_KEY, lang
