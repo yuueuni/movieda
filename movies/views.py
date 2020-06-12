@@ -4,7 +4,7 @@ import sys
 import urllib.request
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Movie, Genre, Actor, Director, Review
 
 # Create your views here.
@@ -35,7 +35,7 @@ class scrap(request):
         global lang
         # json file 불러오기.
         json_url = f'https://api.themoviedb.org/3/discover/movie?api_key={TMDB_KEY}&language={lang}&sort_by=popularity.desc&include_adult=false&include_video=false&page={page}'
-        json_data = reqeust.get(json_url).json()
+        json_data = requests.get(json_url).json()
         return json_data
 
     # 2-0) 배우 이름 바꿔주기 | Actor name (en -> ko)
@@ -83,46 +83,46 @@ class scrap(request):
                 director_list.append(en_to_kr(crew['name']))
         return {'cast_data':cast_list, 'directors': director_list}
 
-
     # 실제 코드
     # 1) 페이지 돌아가면서 받아오기
     for p in range(page, page_limit+1):
-        current_movies = get_json_data(p)['results']
+        current_page_movies = get_json_data(p)['results']
 
         # 2) movie_id로 배우정보,   
-        for tmp_movie in current_movies:
+        for tmp_movie in current_page_movies:
             movie_id = tmp_movie['id']
             title = tmp_movie['title']
-            summary = tmp_movie['overview']
+            summary = tmp_movie['overview'],
             running_time = tmp_movie['runtime']
             release_date = tmp_movie['release_date']
             poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
 
-    
-    for tmp_movie in movies:
-        title = tmp_movie['title']
-        summary = tmp_movie['overview']
-        running_time = tmp_movie['runtime']
-        release_date = tmp_movie['release_date']
-        poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
-        
-        # 이미 존재하는 영화는 추가되지 않음
-        if Movie.objects.filter(title=title, release_date=release_date).exists():
-            continue
-        
-        # genre, actor, director 잠시 제외
-        movie_obj = Movie.objects.create(
-            title = title
-            summary = summary
-            release_date = release_date
-            running_time = running_time
-            poster = poster_url
-        )
+            # genre, actor, director 잠시 제외
+            movie_obj = Movie.objects.create(
+                title = title,
+                summary = summary,
+                release_date = release_date,
+                running_time = running_time,
+                poster = poster_url,
+            )
 
-        # 장르 ManyToMany 추가
-        genres = tmp_movie['genres']
-        for genre_num in genres:
-            ko_genre = hangul_genres[genre_num]
-            movie_obj.genres
+            # 이미 존재하는 영화는 추가되지 않음
+            if Movie.objects.filter(title=title, release_date=release_date).exists():
+                continue
+                    
+            # movies.genres | ManyToMany add
+            genre_list = tmp_movie['genre_ids']
+            for genre_num in genre_list:
+                ko_genre = ko_genres_dict[genre_num]
+                movie_obj.genres.add(ko_genre)
 
+            # movies.actors | ManyToMany add
+            credit_data = get_actors_and_directors(movie_id)
+            for cast_name in credit_data['cast_data']:
+                movie_obj.actors.add(cast_name)
+
+            # movies.directors | ManyToMany add
+            for director_name in credit_data['directors']:
+                movie_obj.directors.add(director_name)
+            
     return redirect('index')
