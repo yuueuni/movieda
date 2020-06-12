@@ -23,10 +23,9 @@ class Movie(models.Model):
     release_date = models.DateTimeField()
     running_time = models.IntegerField()
     poster = models.URLField(null=True, blank=True)
-    genres = models.ManyToManyField(Genre, related_name='movies')
-    actors = models.ManyToManyField(Actor, related_name='movies')
-    directors = models.ManyToManyField(Director, related_name='movies')
-
+    genres = models.ManyToManyField(Genre, blank=True, related_name='movies')
+    actors = models.ManyToManyField(Actor, blank=True, related_name='movies')
+    directors = models.ManyToManyField(Director, blank=True, related_name='movies')
 
 class Review(models.Model):
     rank = models.IntegerField()
