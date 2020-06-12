@@ -83,3 +83,4 @@
 ### To do list
 - [ ] 영화 데이터 입력 (TMDB API 이용)
 - [x] django 모델 구축
+- [ ] serializers.py 등 DRF 환경 설정
