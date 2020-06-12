@@ -14,7 +14,7 @@
 - Django REST API 서버 & Vue.js
 
 - SQLite
-- AWS 배포 (+형수와 함께하는 즐거운 배포시간^0^ OK 접수확인)
+- AWS 배포
 
 ## 프로젝트 기간
 - 2020.06.11(목) - 2020.06.16(화)
@@ -60,9 +60,7 @@
 
 2. 국밥 - 든든
     - 영화 >> 몇 국밥? (ex. 이영화 보다 1국밥 할듯;;)
-
-- 최신 밈
-    - 깡, 관짝, 
+ 
 
 - 유저 : 생년월일로 나이 계산
     - 평점 표기시 성별, 나이별 표기
@@ -81,8 +79,17 @@
 - https://www.erdcloud.com/d/SuBgZhGQTGifi3XsH
 
 ### To do list
-- [ ] 영화 데이터 입력 (TMDB API 이용)
+1) Django_api
+- [x] 영화 데이터 입력 (TMDB API 이용)
 - [x] django 모델 구축
-- [ ] serializers.py 등 DRF 환경 설정
+- [x] serializers.py 등 DRF 환경 설정
 
-- [ ] ManyToMany field에 해당하는 중간 테이블 생성 - model
+- ~~[ ] ManyToMany field에 해당하는 중간 테이블 생성 - model (actor 수가 너무 많음)~~
+    - ~~6/13 - 14 : 주말 동안 해결하기~~ 
+    - ~~actor 그룹 고민해보기~~
+
+
+- [ ] 추천알고리즘 : 로직 고민 (주말과제)
+
+2) Vue_front - 주말과제
+- [x] 쉬러가기

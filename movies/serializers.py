@@ -23,16 +23,16 @@ class DirectorSerializer(serializers.ModelSerializer):
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Movie
-        fields = ('id', 'title', 'summary', 'release_date', 'running_time', 'poster', )
-
-
-class MovieDetailSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True)
     actors = ActorSerializer(many=True)
     directors = DirectorSerializer(many=True)
 
     class Meta:
         model = Movie
-        fields = MovieSerializer.Meta.Fields + ('genres', 'actors', 'directors',)
+        fields = ('id', 'title', 'summary', 'release_date', 'running_time', 'poster', 'genres', 'actors', 'directors',)
+
+
+class MovieDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = MovieSerializer.Meta.fields
