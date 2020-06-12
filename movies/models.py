@@ -6,6 +6,7 @@ User = get_user_model()
 
 # Create your models here.
 class Genre(models.Model):
+    genre_code = models.IntegerField()
     genre = models.CharField(max_length=40)
 
 
