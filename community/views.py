@@ -21,7 +21,7 @@ def create_article(request):
     serializer = ArticleSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(writer=request.user)
-        return Response(serializer.data)
+        return Response({'message': 'success save!', 'data': serializer.data})
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -35,6 +35,29 @@ def detail_article(request, article_pk):
     elif request.method == 'DELETE':
         article.delete()
         return Response({'message': 'success delete!'})
-    else:
+    elif request.method == 'GET':
         serializer = ArticleDetailSerializer(article)
         return Response(serializer.data)
+
+
+@api_view(['POST'])
+def create_comment(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(article=article, commenter=request.user)
+    return Response({'message': 'success save comment!'})
+
+
+@api_view(['PUT', 'DELETE'])
+def detail_comment(request, article_pk, comment_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    if request.method == 'PUT':
+        serializer = CommentSerializer(data=request.data, instance=comment)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(article=article, commenter=request.user)
+            return Response({'message': 'success update comment!', 'data': serializer.data})
+    elif request.method == 'DELETE':
+        comment.delete()
+        return Response({'message': 'success delete comment!'})
