@@ -82,4 +82,4 @@
 
 ### To do list
 - [ ] 영화 데이터 입력 (TMDB API 이용)
-- [ ] django 모델 구축
+- [x] django 모델 구축
