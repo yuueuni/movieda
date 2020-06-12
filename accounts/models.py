@@ -7,3 +7,4 @@ from django.conf import settings
 class User(AbstractUser):
     birthday = models.DateTimeField(null=True)
     gender = models.BooleanField(default=True)
+    following = models.ManyToManyField()
