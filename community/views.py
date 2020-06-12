@@ -27,11 +27,12 @@ def create_article(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def detail_article(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
+    comments = article.comments.all
     if request.method == 'PUT':
         serializer = ArticleSerializer(data=request.data, instance=article)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response({'message': 'success update!', 'data': serializer.data})
+            return Response({'message': 'success update!', 'article': serializer.data, 'comments': comments})
     elif request.method == 'DELETE':
         article.delete()
         return Response({'message': 'success delete!'})
