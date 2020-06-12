@@ -77,7 +77,13 @@ def get_actors_and_directors(movie_id):
             director_list.append(en_to_kr(crew['name']))
     return {'cast_data':cast_list, 'directors': director_list}
 
-
+def get_runningtime(movie_id):
+    global TMDB_KEY
+    movie_detail_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_KEY}'
+    movie_detail_data = requests.get(movie_detail_url).json()
+    running_time = movie_detail_data['runtime']
+    return running_time
+    
 def scrap(request):    
     global TMDB_KEY, lang
     page = 2
@@ -100,7 +106,6 @@ def scrap(request):
             genre_obj = Genre.objects.create(genre_code=g_id, genre=g_name)
             genre_obj.save()
         
-
     # 실제 코드
     # 1) 페이지 돌아가면서 받아오기
     for p in range(page, page_limit+1):
@@ -113,13 +118,16 @@ def scrap(request):
             summary = tmp_movie['overview'],
             release_date = tmp_movie['release_date']
             poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
+            
+            # movie_detail => running_time 받아오기
+            running_time = get_runningtime(movie_id)
 
             # genre, actor, director 잠시 제외
             movie_obj = Movie.objects.create(
                 title = title,
                 summary = summary,
                 release_date = release_date,
-                running_time = 20,
+                running_time = running_time,
                 poster = poster_url,
             )
 
@@ -129,7 +137,6 @@ def scrap(request):
 
             # movies.genres | ManyToMany add
             genre_list = tmp_movie['genre_ids']
-
 
             for genre_num in genre_list:
                 ko_genre = ko_genres_dict[genre_num]
