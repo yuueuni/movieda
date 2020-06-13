@@ -78,6 +78,8 @@
 ### DB ERD
 - https://www.erdcloud.com/d/SuBgZhGQTGifi3XsH
 
+![ERD cloud](/my_img/ERD.jpg)
+
 
 ## 2020.06.13
 - [x] ERD cloud 모델 업데이트 - Add user favors
