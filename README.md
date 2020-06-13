@@ -101,15 +101,15 @@
 2) Vue_front - 주말과제
 - [ ] Data 받아오기
 - [ ] 화면구성
-    - 1) Home(index)
+    1) Home(index)
         - a) navbar
             - navigation
         - b) body
             - all movies(carousel, sort by desc)
             - user favor movie(with carousel)
         - c) pagination 
-    - 2) User - signup, signin, signout
-    - 3) User Favors
+    2) User - signup, signin, signout
+    3) User Favors
         - a) favor_actors
         - b) favor_direcotors
         - c) favor_genres
