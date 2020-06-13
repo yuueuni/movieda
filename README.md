@@ -78,7 +78,14 @@
 ### DB ERD
 - https://www.erdcloud.com/d/SuBgZhGQTGifi3XsH
 
-### To do list
+![ERD cloud](/my_img/ERD.jpg)
+
+
+## 2020.06.13
+- [x] ERD cloud 모델 업데이트 - Add user favors
+- [x] Update logic - loads movie data
+
+### To do list (last update - 2020.06.13)
 1) Django_api
 - [x] 영화 데이터 입력 (TMDB API 이용)
 - [x] django 모델 구축
@@ -88,8 +95,20 @@
     - ~~6/13 - 14 : 주말 동안 해결하기~~ 
     - ~~actor 그룹 고민해보기~~
 
-
 - [ ] 추천알고리즘 : 로직 고민 (주말과제)
 
 2) Vue_front - 주말과제
-- [x] 쉬러가기
+- [ ] Data 받아오기
+- [ ] 화면구성
+    1) Home(index)
+        - a) navbar
+            - navigation
+        - b) body
+            - all movies(carousel, sort by desc)
+            - user favor movie(with carousel)
+        - c) pagination 
+    2) User - signup, signin, signout
+    3) User Favors
+        - a) favor_actors
+        - b) favor_direcotors
+        - c) favor_genres
