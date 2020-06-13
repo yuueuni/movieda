@@ -33,6 +33,7 @@ def get_json_data(page):
     json_data = requests.get(json_url).json()
     return json_data
 
+
 # 2-0) 배우 이름 바꿔주기 | Actor name (en -> ko)
 def en_to_kr(cname):
     papago_url = 'https://openapi.naver.com/v1/papago/detectLangs'
@@ -57,25 +58,54 @@ def en_to_kr(cname):
         print("Error Code:" + rescode)
         return
 
-# 2) movie_obj와 Actor정보 한국어로 저장
-def get_actors_and_directors(movie_id):
-    global TMDB_KEY
-    credit_URL = f'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={TMDB_KEY}&language=ko-kr'
-    credit_data = requests.get(credit_URL).json()
-    cast_data = credit_data['cast']
-    crew_data = credit_data['crew']
+# 2) Actor & Director 불러오기
+def get_actors_and_directors(movie_id, original_title):
+    client_id = config("CLIENT_ID")
+    client_secret = config("CLIENT_SECRET")
 
-    # casting
-    cast_list = []
-    for cast in cast_data:
-        cast_list.append(en_to_kr(cast['name']))
+    encText = urllib.parse.quote(original_title)
+    url = f"https://openapi.naver.com/v1/search/movie?query={encText}&display=1" # json 결과
 
-    director_list = []
-    # director
-    for crew in crew_data:
-        if crew['job'] == 'Director':
-            director_list.append(en_to_kr(crew['name']))
-    return {'cast_data':cast_list, 'directors': director_list}
+    request = urllib.request.Request(url)
+    request.add_header("X-Naver-Client-Id",client_id)
+    request.add_header("X-Naver-Client-Secret",client_secret)
+    response = urllib.request.urlopen(request)
+    rescode = response.getcode()
+    
+    if(rescode==200):
+        response_body = response.read()
+        trans = json.loads(response_body.decode('utf-8'))['items']
+        # 만약 검색결과가 있는 경우
+        if trans:
+            actor_list = trans[0]['actor'].split('|')[:-1]
+            director_list =  trans[0]['director'].split('|')[:-1]
+            return {'actor_list': actor_list, 'director_list':director_list}
+        
+        # 없는 경우에만 movie_detail.credit 정보를 파파고로 번역
+        else:
+            # 1) movie_detail.credits에서 정보 불러오기
+            global TMDB_KEY
+            credit_URL = f'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={TMDB_KEY}&language=ko-kr'
+            credit_data = requests.get(credit_URL).json()
+            cast_data = credit_data['cast']
+            crew_data = credit_data['crew']
+
+            # 2) papago로 번역후 return
+            # actors
+            actor_list = []
+            for cast in cast_data:
+                actor_list.append(en_to_kr(cast['name']))
+
+            director_list = []
+            # director
+            for crew in crew_data:
+                if crew['job'] == 'Director':
+                    director_list.append(en_to_kr(crew['name']))
+            return {'actor_list':actor_list, 'director_list': director_list}
+
+    else:
+        print("Error Code:" + rescode)
+        return
 
 def get_runningtime(movie_id):
     global TMDB_KEY
@@ -86,7 +116,7 @@ def get_runningtime(movie_id):
     
 def scrap(request):    
     global TMDB_KEY, lang
-    page = 2
+    page = 1
     page_limit = 2
     poster_base_url = 'https://image.tmdb.org/t/p/w500/'
     
@@ -111,7 +141,7 @@ def scrap(request):
     for p in range(page, page_limit+1):
         current_page_movies = get_json_data(p)['results']
         
-        # 2) movie_id로 배우정보,   
+        # 2) movie를 순회하며 저장
         for tmp_movie in current_page_movies:
             movie_id = tmp_movie['id']
             title = tmp_movie['title']
@@ -144,8 +174,11 @@ def scrap(request):
                 movie_obj.genres.add(ko_gen_obj)
 
             # movies.actors | ManyToMany add
-            credit_data = get_actors_and_directors(movie_id)
-            for cast_name in credit_data['cast_data']:
+
+            # original_title => naver_search_api를 이용하여 get_actor_and_director로 넘기기,   
+            original_title = tmp_movie['original_title']
+            credit_data = get_actors_and_directors(movie_id, original_title)
+            for cast_name in credit_data['actor_list']:
                 if Actor.objects.filter(actor=cast_name).exists():
                     tmp_actor = Actor.objects.get(actor=cast_name)
                 else:
@@ -154,7 +187,7 @@ def scrap(request):
                 movie_obj.actors.add(tmp_actor)
 
             # movies.directors | ManyToMany add
-            for director_name in credit_data['directors']:
+            for director_name in credit_data['director_list']:
                 if Director.objects.filter(director=director_name).exists():
                     tmp_director = Director.objects.get(director=director_name)
                 else:
