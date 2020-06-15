@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-
+import Home from '../views/movies/Home.vue'
+import MovieDetailView from '../views/movies/MovieDetailView.vue'
 
 import LoginView from '../views/accounts/LoginView.vue'
 import SignupView from '../views/accounts/SignupView.vue'
@@ -16,12 +16,17 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/accounts/login',
+    path: '/Movie/:id',
+    name: 'MovieDetail',
+    component: MovieDetailView
+  },
+  {
+    path: '/login',
     name: 'Login',
     component: LoginView,
   },
   {
-    path: '/accounts/signup',
+    path: '/signup',
     name: 'Signup',
     component: SignupView,
   },
