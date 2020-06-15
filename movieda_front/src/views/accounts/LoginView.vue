@@ -28,7 +28,7 @@ export default {
     },
     methods: {
         login() {
-            this.$emit('submit-login-data', this.signupData)
+					this.$emit('submit-login-data', this.loginData)
         }
     }
 }
