@@ -34,8 +34,7 @@
 			fetchMovies() {
 				axios.get(SERVER_URL + '/movies/')
 					.then(res => {
-						console.log(res)
-						this.movieList = res.data
+						this.movieList = res.data.data
 					})
 			},
 			onMovieSelect(movie) {

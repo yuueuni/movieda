@@ -16,7 +16,7 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/Movie/:id',
+    path: '/movie/:movieid',
     name: 'MovieDetail',
     component: MovieDetailView
   },
