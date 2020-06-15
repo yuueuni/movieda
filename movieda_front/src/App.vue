@@ -4,25 +4,25 @@
       <router-link to="/">Home</router-link> |
       <router-link v-if="!isLoggedIn" :to="{ name: 'Login' }">Login |</router-link>
       <router-link v-if="!isLoggedIn" :to="{ name: 'Signup' }">Signup |</router-link>
-      <span v-if="isLoggedIn"> {{username}} 님 환영합니다.|</span>
+      <span v-if="isLoggedIn"> {{username}} 님 환영합니다! </span>
       <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout"> Logout</router-link>
     </div>
     <router-view @submit-login-data="login" @submit-signup-data="signup" @onMovieSelected="onMovieSelect"/>
     <div v-if="selectedMovie">
-      {{ selectedMovie.id }}
+      <MovieDetailView :movie="selectedMovie"/>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-// import MovieDetailView from './views/movies/MovieDetailView.vue'
+import MovieDetailView from './views/movies/MovieDetailView.vue'
 
 const SERVER_URL = 'http://localhost:8000'
 
 export default {
   name: 'App',
-  
+  components: {MovieDetailView},
   data() {
     return {
       username: null,
@@ -69,8 +69,8 @@ export default {
     },
     onMovieSelect(movie) {
       this.selectedMovie = movie
-      console.log(movie)
-      this.$router.push({ name: 'movieDetailView', params:""})
+      console.log(this.selectedMovie)
+      this.$router.push({ name: 'MovieDetail', params: {movieid: this.selectedMovie.id}})
     },
   },
 
