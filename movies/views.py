@@ -4,7 +4,8 @@ import sys
 import urllib.request
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import get_user_model
 from .models import Movie, Genre, Actor, Director, Review
 
 # rest_framework
@@ -13,16 +14,95 @@ from rest_framework.response import Response
 from .serializers import MovieSerializer
 
 from decouple import config
+from django.db.models import Q
 
 lang = 'ko-KR'
 TMDB_KEY = config("TMDB_KEY")
+
+
+User = get_user_model()
 
 
 @api_view(['GET'])
 def index(request):
     movies = Movie.objects.all()
     serializer = MovieSerializer(movies, many=True)
+    if request.user.is_authenticated:
+        # values : key, value 형태 | values_list : tuples 형태 | values_list(flat=True) : list 형태
+        favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
+        recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()
+        recommend_serializer = MovieSerializer(recommend_movie, many=True)
+        context = {
+            'data': serializer.data,
+            'recommend_movies': recommend_serializer.data,
+        }
+    else:
+        context = {
+            'data': serializer.data,
+        }
+    return Response(context)
+
+
+@api_view(['POST'])
+def search(request):
+    keyword = request.data.get('keyword')
+    movies = Movie.objects.filter(
+        Q(title__contains=keyword) |
+        Q(actors__actor__contains=keyword) |
+        Q(directors__director__contains=keyword)
+    ).distinct()
+    serializer = MovieSerializer(movies, many=True)
     return Response(serializer.data)
+
+
+# 배우, 감독, 영화 like
+@api_view(['GET'])
+def like_actor(request, actor_pk):
+    actor = Actor.objects.get(pk=actor_pk)
+    user = request.user
+    if user.favorite_actors.filter(pk=actor_pk).exists():
+        user.favorite_actors.remove(actor)
+        result = 'remove'
+    else:
+        user.favorite_actors.add(actor)
+        result = 'add'
+    context = {
+        'message': result,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def like_director(request, director_pk):
+    director = Actor.objects.get(pk=director_pk)
+    user = request.user
+    if user.favorite_directors.filter(pk=director_pk).exists():
+        user.favorite_directors.remove(director)
+        result = 'remove'
+    else:
+        user.favorite_directors.add(director)
+        result = 'add'
+    context = {
+        'message': result,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def like_movie(request, movie_pk):
+    movie = Actor.objects.get(pk=movie_pk)
+    user = request.user
+    if user.favorite_movies.filter(pk=movie_pk).exists():
+        user.favorite_movies.remove(movie)
+        result = 'remove'
+    else:
+        user.favorite_movies.add(movie)
+        result = 'add'
+    context = {
+        'message': result,
+    }
+    return Response(context)
+
 
  # 1) 페이지를 돌아가면서 movies_data 받아오기 - data size => 20 x 50p (1000개)
 def get_json_data(page):
