@@ -95,7 +95,7 @@
     - ~~6/13 - 14 : 주말 동안 해결하기~~ 
     - ~~actor 그룹 고민해보기~~
 
-- [ ] 추천알고리즘 : 로직 고민 (주말과제)
+- [x] 추천알고리즘 : 로직 고민 (주말과제)
 
 2) Vue_front - 주말과제
 - [ ] Data 받아오기
@@ -116,8 +116,8 @@
 ## 2020.06.15
 
 ### Django
-- [ ] 영화 추천 로직
-- [ ] url path
+- [x] 영화 추천 로직
+- [x] url path
 - [ ] 시간 된다면 JWT 설정
 
 ### Vue.js
@@ -135,6 +135,7 @@
     
     - 회원가입 (~~님 환영합니다.)
     - 로그인 (로그아웃)
+    
     - 마이페이지
         - 팔로우 목록 (배우, 감독)
     
@@ -155,8 +156,69 @@
         - 감독
         - 영화
 
-- 게시판 : 자유 게시판 (말머리X 단순 글 작성과 댓글) - Community/index (/community/<int:article_pk>/)
+- 게시판 : 자유 게시판 (말머리X 단순 글 작성과 댓글) - Community/index (/community/\<int:article_pk>/)
 
 - 영화 - Movies/index
     - 디테일 : 썸네일, 줄거리, 출연진, 감독
         - 출연진 정보 : 대표 5명 > 더보기 (전체 출연진 리스트 - Modal 이용) 이름 누르면 좋아요 기능
+        
+
+## Response Data Set
+### /movies/
+> 개수 전체
+- 'data' : 영화 전체 데이터('id', 'title', 'summary', 'release_date', 'running_time', 'poster', 'genres', 'actors', 'directors',)
+- 'recommend_movies' : 좋아요 누른 영화들의 장르 기반 추천 영화 데이터
+
+
+### /movies/like_actor/\<int:actor_pk>/
+- 로그인된 유저가 해당 배우를 좋아요 했다면 취소, 안했으면 좋아요
+- add, remove 메시지 리턴
+### /movies/like_director/\<int:director_pk>/
+- 로그인된 유저가 해당 감독을 좋아요 했다면 취소, 안했으면 좋아요
+- add, remove 메시지 리턴
+### /movies/like_movie/\<int:movie_pk>/
+- 로그인된 유저가 해당 영화를 좋아요 했다면 취소, 안했으면 좋아요
+- add, remove 메시지 리턴
+
+
+### /movies/search/
+> POST `keyword` 데이터 - form 이용?
+- 해당 키워드를 포함하는 영화 데이터(키워드 검색 : 영화 제목, 배우, 감독)
+
+### /profile/\<str:username>/
+- 'serializer.data': 유저 데이터('id', 'username', 'favorite_actors', 'favorite_directors', 'favorite_movies')
+- 내가 쓴 리뷰 데이터 : 유저 정보가 아닌 유저 id(pk) 값
+
+
+## 좋아요 기능
+- django 구현 or vue 구현
+
+- 장고 > 기존 좋아요 눌렀는지 유무
+- 뷰 > 어느 배우, 감독을 눌렀는지
+
+
+### /community/
+- 모든 게시글 보기
+- 전체 article 데이터
+
+### /community/create/
+> POST method. form data - title, content
+- 새로운 게시글 등록
+- 로그인 필수
+
+### /community/\<int:article_pk>/
+- `GET` method : 게시글 자세히 보기 (+ 등록된 댓글)
+
+- `PUT` method : 게시글 수정 (현재 로그인된 유저 == 게시글 등록 유저)
+
+- `DELETE` method : 게시글 삭제 (현재 로그인된 유저 == 게시글 등록 유저)
+
+### /community/\<int:article_pk>/create_comment/
+> POST method. form data - content
+- 해당 게시글에 댓글 등록
+- 로그인 필수
+
+### /community/\<int:article_pk>/comment/\<int:comment_pk>/
+- `PUT` method : 댓글 수정 (현재 로그인된 유저 == 댓글 등록 유저)
+
+- `DELETE` method : 댓글 삭제 (현재 로그인된 유저 == 댓글 등록 유저)
