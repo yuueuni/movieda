@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from .models import Genre, Actor, Director, Movie, Review
+from accounts.models import User
 
-# from accounts.serializers import UserSerializer
-
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,8 +36,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    # reviewer = UserSerializer(required=False)
-    movies = MovieSerializer
+    reviewer = UserSerializer(read_only=True)
+    movies = MovieSerializer(read_only=True)
 
     class Meta:
         model = Review

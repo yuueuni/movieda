@@ -6,15 +6,20 @@ import json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from .models import Movie, Genre, Actor, Director, Review
 
 # rest_framework
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, ReviewSerializer
 
 from decouple import config
-from django.db.models import Q
+from django.db.models import Q, Avg
+
+import random
+
 
 lang = 'ko-KR'
 TMDB_KEY = config("TMDB_KEY")
@@ -30,7 +35,10 @@ def index(request):
     if request.user.is_authenticated:
         # values : key, value 형태 | values_list : tuples 형태 | values_list(flat=True) : list 형태
         favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
-        recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()
+        if not favorite_genres:
+            recommend_movie = random.choices(movies, k=8)
+        else:
+            recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:8]
         recommend_serializer = MovieSerializer(recommend_movie, many=True)
         context = {
             'data': serializer.data,
@@ -102,6 +110,39 @@ def like_movie(request, movie_pk):
         'message': result,
     }
     return Response(context)
+    
+
+@api_view(['GET'])
+def get_review(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    review_list = movie.reviews.all()
+    avg_rank = review_list.aggregate(Avg('rank'))
+    review_serializer = ReviewSerializer(review_list, many=True)
+    context = {
+        'data':review_serializer.data,
+        'avg_rank': round(avg_rank.get('rank__avg'), 2),
+    }
+    return Response(context)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_review(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    review_serializer = ReviewSerializer(data=request.data)
+    if review_serializer.is_valid(raise_exception=True):
+        review_serializer.save(reviewer=request.user, movies=movie)
+        return Response(review_serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_review(request, movie_pk, review_pk):
+    user = request.user
+    review = get_object_or_404(Review, pk=review_pk)
+    if review.reviewer == user:
+        review.delete()
+    return Response({'message': 'delete'})
+
 
 
  # 1) 페이지를 돌아가면서 movies_data 받아오기 - data size => 20 x 50p (1000개)
@@ -277,3 +318,4 @@ def scrap(request):
 
             movie_obj.save()
     return redirect('movies:index')
+

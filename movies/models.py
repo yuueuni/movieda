@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 # from django.contrib.auth import get_user_model
 User = settings.AUTH_USER_MODEL
 
@@ -21,7 +22,7 @@ class Director(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=100)
     summary = models.TextField()
-    release_date = models.DateTimeField()
+    release_date = models.DateField()
     running_time = models.IntegerField()
     poster = models.URLField(null=True, blank=True)
     genres = models.ManyToManyField(Genre, blank=True, related_name='movies')
@@ -29,7 +30,7 @@ class Movie(models.Model):
     directors = models.ManyToManyField(Director, blank=True, related_name='movies')
 
 class Review(models.Model):
-    rank = models.IntegerField()
+    rank = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

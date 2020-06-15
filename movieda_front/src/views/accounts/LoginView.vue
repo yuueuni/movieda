@@ -30,7 +30,12 @@ export default {
         login() {
 					this.$emit('submit-login-data', this.loginData)
         }
-    }
+		},
+		created() {
+			if (this.$cookies.isKey('auth-token')){
+				this.$router.push({ name:'Home'})
+			}
+		}
 }
 </script>
 
