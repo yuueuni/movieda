@@ -7,25 +7,22 @@
       <span v-if="isLoggedIn"> {{username}} 님 환영합니다! </span>
       <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout"> Logout</router-link>
     </div>
-    <router-view @submit-login-data="login" @submit-signup-data="signup" @onMovieSelected="onMovieSelect"/>
-    <div v-if="selectedMovie">
-      <MovieDetailView :movie="selectedMovie"/>
-    </div>
+    <router-view @submit-login-data="login" @submit-signup-data="signup" @onMovieSelected="onMovieSelect" :movie="selectedMovie"/>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import MovieDetailView from './views/movies/MovieDetailView.vue'
+// import Home from './views/movies/Home.vue'
 
 const SERVER_URL = 'http://localhost:8000'
 
 export default {
   name: 'App',
-  components: {MovieDetailView},
+  // components: {Home},
   data() {
     return {
-      username: null,
+      username: this.$cookies.get('username'),
       isLoggedIn: false,
       errorMessage: false,
       selectedMovie: null,
@@ -33,15 +30,17 @@ export default {
   },
   
   methods: {
-    setCookie(token) {
+    setCookie(token, data) {
       this.$cookies.set('auth-token', token)
+      this.$cookies.set('username', data.username)
+      this.username = data.username
       this.isLoggedIn = true
     },
 
     signup(signupData){
       axios.post(SERVER_URL + '/rest-auth/registration/', signupData)
         .then(res => {
-          this.setCookie(res.data.key)
+          this.setCookie(res.data.key, signupData)
           this.$router.push({ name: 'Home' })
         })
         .catch(err => this.errorMessage = err.response.data)
@@ -50,10 +49,10 @@ export default {
     login(loginData) {
       axios.post(SERVER_URL + '/rest-auth/login/', loginData)
         .then(res => {
-          this.setCookie(res.data.key)
+          this.setCookie(res.data.key, loginData)
           this.isLoggedIn = true
-          this.$router.push({ name: 'Home' })
           this.username = loginData.username
+          this.$router.push({ name: 'Home' })
         })
         .catch(() => alert("회원정보가 잘못되었습니다."))
     },
