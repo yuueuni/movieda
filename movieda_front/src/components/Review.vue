@@ -1,5 +1,5 @@
 <template>
-  <div class="test">
+  <div class="mt-5">
 		<ReviewInput @create-review="onCreateReviewValue" :reviewData="reviewValue"/>
 		<ReviewList @on-delete-review="deleteReview" :avgRank="avgRank" :reviewList="reviewList"/>
   </div>
@@ -72,7 +72,4 @@ export default {
 </script>
 
 <style scoped>
-.test {
-	background-color:yellow;
-}
 </style>

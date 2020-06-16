@@ -119,6 +119,8 @@ def like_movie(request, movie_pk):
 def get_review(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     review_list = movie.reviews.all()
+    if not review_list:
+        return Response()
     avg_rank = review_list.aggregate(Avg('rank'))
     review_serializer = ReviewSerializer(review_list, many=True)
     context = {
