@@ -14,6 +14,7 @@ export default {
   },
   methods: {
     onMovieSelected(movie) {
+      console.log
       this.$emit("onMovieSelected", movie)
     }
   }

@@ -7,7 +7,7 @@
       <span v-if="isLoggedIn"> {{username}} 님 환영합니다! </span>
       <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout"> Logout</router-link>
     </div>
-    <router-view @submit-login-data="login" @submit-signup-data="signup" @onMovieSelected="onMovieSelect" :movie="selectedMovie"/>
+    <router-view @submit-login-data="login" @submit-signup-data="signup" />
   </div>
 </template>
 
@@ -61,15 +61,11 @@ export default {
       axios.get(SERVER_URL + '/rest-auth/logout/')
         .then(() => {
           this.$cookies.remove('auth-token')
+          this.$cookies.remove('username')
           this.isLoggedIn = false
           this.$router.push({ name: 'Home' })
         })
         .catch(err => console.log(err.response))
-    },
-    onMovieSelect(movie) {
-      this.selectedMovie = movie
-      console.log(this.selectedMovie)
-      this.$router.push({ name: 'MovieDetail', params: {movieid: this.selectedMovie.id}})
     },
   },
 

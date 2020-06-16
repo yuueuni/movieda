@@ -14,16 +14,13 @@ export default {
 			reviewData:{
 				'rank': null,
 				'content': null,
-
 			}
 		}
 	},
 	methods: {
 		createReview(reviewData) {
-			console.log('---------------------')
-			console.log(reviewData)
-			console.log('---------------------')
 			this.$emit('create-review', this.reviewData)
+			console.log(reviewData)
 		},
 	}
 }
