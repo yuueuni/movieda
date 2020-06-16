@@ -34,9 +34,9 @@ def index(request):
         # values : key, value 형태 | values_list : tuples 형태 | values_list(flat=True) : list 형태
         favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
         if not favorite_genres:
-            recommend_movie = random.choices(movies, k=8)
+            recommend_movie = random.choices(movies, k=5)
         else:
-            recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:8]
+            recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:5]
         recommend_serializer = MovieSerializer(recommend_movie, many=True)
         context = {
             'data': serializer.data,

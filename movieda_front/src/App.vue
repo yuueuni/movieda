@@ -27,7 +27,6 @@
         </div>
       </nav>
     </div>
-    <h2 v-if="errorMessage" class="my-2" style="color: red;">{{ errorMessage }}</h2>
     <router-view @submit-login-data="login" @submit-signup-data="signup" />
   </div>
 </template>
