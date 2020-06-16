@@ -31,7 +31,6 @@ export default {
 			this.$emit('create-review', this.reviewData)
 		},
 		onChangeRank(e) {
-			console.log(e.target.value)
 			this.reviewData.rank = e.target.value
 		}
 	}
@@ -39,7 +38,5 @@ export default {
 </script>
 
 <style scoped>
-	.input-rank {
-		text-align: center;
-	}
+
 </style>

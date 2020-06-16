@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from movies.models import Movie
 
 User = get_user_model()
 
@@ -7,6 +8,7 @@ User = get_user_model()
 # Create your models here.
 class Article(models.Model):
     title = models.CharField(max_length=100)
+    movies = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav" class="sticky-top">
+    <div id="nav" class="sticky-top shadow-sm">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <router-link to="/"><img src="./assets/moviedaLogo.png" width="120rem" alt="" class="d-block mx-2"></router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,9 +8,6 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link"><router-link to="/">Home</router-link></a>
-            </li>
             <li class="nav-item">
               <a class="nav-link">
                 <router-link v-if="!isLoggedIn" :to="{ name: 'Login' }">Login</router-link>
@@ -22,6 +19,9 @@
                 <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout">Logout</router-link>
                 <router-link v-if="!isLoggedIn" :to="{ name: 'Signup' }">Signup</router-link>
               </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link"><router-link to="/community">Community</router-link></a>
             </li>
           </ul>
         </div>

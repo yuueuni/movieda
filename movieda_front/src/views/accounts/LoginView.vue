@@ -10,7 +10,7 @@
         </div>
         <div class="input-block">
           <label for="password" class="sr-only">password</label>
-          <input v-model="loginData.password" id="password" type="password" class="form-control" placeholder="Password" required>
+          <input @keypress.enter="login" v-model="loginData.password" id="password" type="password" class="form-control" placeholder="Password" required>
         </div>
         <div>
           <button @click="login" class="btn btn-primary btn-lg btn-block">Login</button>
