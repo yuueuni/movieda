@@ -4,7 +4,6 @@
 		<div class="container">
       <button v-if="!isHidden" @click="recommendMovies">오늘 뭐 보지?</button>
       <div class="row">
-  
         <div class="col-12 col-md-6 col-lg-3 my-3" v-for="rmovie in recommendMovie" :key="`rmovie_${rmovie.id}`">
           <div class="card" style="width: 14rem;">
             <img @click="onMovieSelect(rmovie)" :rmovie="rmovie" :src="rmovie.poster" class="card-img-top" alt="rmovie.title">
@@ -55,7 +54,7 @@
 					})
 			},
 			onMovieSelect(movie) {
-				this.$emit('onMovieSelected', movie)
+				this.$router.push(`/movie/${movie.id}`)
       },
       recommendMovies() {
         if (!this.$cookies.get('auth-token')) {

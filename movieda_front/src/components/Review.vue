@@ -1,7 +1,7 @@
 <template>
   <div class="test">
 		<ReviewInput @create-review="onCreateReviewValue" :reviewData="reviewValue"/>
-		<ReviewList @on-delete-review="deleteReview"/>
+		<ReviewList @on-delete-review="deleteReview" :avgRank="avgRank" :reviewList="reviewList"/>
   </div>
 </template>
 
@@ -19,10 +19,23 @@ export default {
 		return {
 			'reviewValue': null,
 			'reviewList': [],
+			'avgRank': null,
 			'errorMessage': null,
 		}
 	},
 	methods: {
+		getReviews() {
+			const movieID = this.$route.params.movieid
+			const review_URL = SERVER_URL + '/movies/' + movieID + '/get_review/'
+			axios.get(review_URL)
+        .then(res => {
+					console.log(res);
+					const { data, avg_rank } = res.data
+					this.reviewList = data
+					console.log(data);
+					this.avgRank = avg_rank
+        })
+		},
 		onCreateReviewValue(reviewData) {
 			const config = {
 				headers: {
@@ -33,9 +46,8 @@ export default {
 			this.reviewValue = reviewData
 			axios.post(createReview_URL , this.reviewValue, config)
 				.then(res => {
-					console.log(reviewData)
-					console.log(res)
-					console.log('잘 왔어요')
+					const { data } = res;
+					this.reviewList = [...this.reviewList, data];
 				})
 				.catch(err => {
 					console.log(err.response.data)
@@ -50,9 +62,11 @@ export default {
 				}
 			}
 			const deleteReview_URL = SERVER_URL + '/movies/' + this.$route.params.movieid + '/delete_review/' + review_pk
-			console.log(deleteReview_URL)
 			axios.post(deleteReview_URL, review_pk, config)
-		}
+		},
+	},
+	mounted() {
+		this.getReviews()
 	}
 }
 </script>
@@ -60,6 +74,5 @@ export default {
 <style scoped>
 .test {
 	background-color:yellow;
-	height: 10rem;
 }
 </style>

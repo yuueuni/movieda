@@ -60,6 +60,11 @@ def search(request):
     serializer = MovieSerializer(movies, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def movie_detail(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    serializer = MovieSerializer(movie)
+    return Response(serializer.data)
 
 # 배우, 감독, 영화 like
 @api_view(['GET'])
@@ -238,8 +243,8 @@ def get_runningtime(movie_id):
 
 def scrap(request):
     global TMDB_KEY, lang
-    page = 1
-    page_limit = 2
+    page = 3
+    page_limit = 3
     poster_base_url = 'https://image.tmdb.org/t/p/w500/'
 
     # Intro_준비물) Save Genre_obj & Create ko_genre_dict | id(num): name(hangul)
