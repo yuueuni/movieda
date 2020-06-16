@@ -1,12 +1,33 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link v-if="!isLoggedIn" :to="{ name: 'Login' }">Login |</router-link>
-      <router-link v-if="!isLoggedIn" :to="{ name: 'Signup' }">Signup |</router-link>
-      <span v-if="isLoggedIn"> {{username}} 님 환영합니다! </span>
-      <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout"> Logout</router-link>
+    <div id="nav" class="sticky-top">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <router-link to="/"><img src="./assets/moviedaLogo.png" width="120rem" alt="" class="d-block mx-2"></router-link>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link"><router-link to="/">Home</router-link></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <router-link v-if="!isLoggedIn" :to="{ name: 'Login' }">Login</router-link>
+                <span v-if="isLoggedIn"> {{username}} 님 환영합니다!</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <router-link v-if="isLoggedIn" to="/accounts/logout" @click.native="logout">Logout</router-link>
+                <router-link v-if="!isLoggedIn" :to="{ name: 'Signup' }">Signup</router-link>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
+    <h2 v-if="errorMessage" class="my-2" style="color: red;">{{ errorMessage }}</h2>
     <router-view @submit-login-data="login" @submit-signup-data="signup" />
   </div>
 </template>
@@ -42,8 +63,9 @@ export default {
         .then(res => {
           this.setCookie(res.data.key, signupData)
           this.$router.push({ name: 'Home' })
+          alert("환영합니다 " + signupData.username + "님!")
         })
-        .catch(err => this.errorMessage = err.response.data)
+        .catch(() => alert("이미 있는 아이디입니다."))
     },
 
     login(loginData) {
@@ -54,7 +76,10 @@ export default {
           this.username = loginData.username
           this.$router.push({ name: 'Home' })
         })
-        .catch(() => alert("회원정보가 잘못되었습니다."))
+        .catch(() => {
+          alert("입력 정보가 맞지 않습니다.")
+          this.errorMessage = "로그인 정보를 확인해주세요."
+        })
     },
 
     logout() {
@@ -84,16 +109,13 @@ export default {
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-}
-
 #nav a {
+  text-decoration: none;
+  color: #797c8b;
   font-weight: bold;
-  color: #2c3e50;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #2c3e50;
 }
 </style>
