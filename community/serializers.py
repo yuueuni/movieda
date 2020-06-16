@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Article, Comment
 
 from accounts.serializers import UserSerializer
+from movies.serializers import MovieSerializer
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -9,7 +10,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'title', 'content', 'writer', 'created_at', 'updated_at',)
+        fields = ('id', 'title', 'content', 'writer', 'movies', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'writer', 'created_at', 'updated_at',)
 
 

@@ -30,24 +30,19 @@ User = get_user_model()
 def index(request):
     movies = Movie.objects.all()
     serializer = MovieSerializer(movies, many=True)
-    if request.user.is_authenticated:
-        # values : key, value 형태 | values_list : tuples 형태 | values_list(flat=True) : list 형태
-        favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
-        if not favorite_genres:
-            recommend_movie = random.choices(movies, k=5)
-        else:
-            recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:5]
-        recommend_serializer = MovieSerializer(recommend_movie, many=True)
-        context = {
-            'data': serializer.data,
-            'recommend_movies': recommend_serializer.data,
-        }
-    else:
-        context = {
-            'data': serializer.data,
-        }
-    return Response(context)
+    return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def recommendation(request):
+    movies = Movie.objects.all()
+    if not request.user.favorite_movies.exists():
+        recommend_movie = random.choices(movies, k=5)
+    else:
+        favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
+        recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:5]
+    recommend_serializer = MovieSerializer(recommend_movie, many=True)
+    return Response(recommend_serializer.data)
 
 @api_view(['POST'])
 def search(request):
@@ -64,7 +59,16 @@ def search(request):
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     serializer = MovieSerializer(movie)
-    return Response(serializer.data)
+    check = 'no'
+    if request.user.is_authenticated:
+        user = request.user
+        if user.favorite_movies.filter(pk=movie_pk).exists():
+            check = 'yes'
+    context = {
+        'data': serializer.data,
+        'message': check,
+    }
+    return Response(context)
 
 # 배우, 감독, 영화 like
 @api_view(['GET'])
@@ -80,12 +84,12 @@ def like_actor(request, actor_pk):
     context = {
         'message': result,
     }
-    return Response(context)
+    return Response({'message': result})
 
 
 @api_view(['GET'])
 def like_director(request, director_pk):
-    director = Actor.objects.get(pk=director_pk)
+    director = Director.objects.get(pk=director_pk)
     user = request.user
     if user.favorite_directors.filter(pk=director_pk).exists():
         user.favorite_directors.remove(director)
@@ -96,12 +100,13 @@ def like_director(request, director_pk):
     context = {
         'message': result,
     }
-    return Response(context)
+    return Response({'message': result})
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def like_movie(request, movie_pk):
-    movie = Actor.objects.get(pk=movie_pk)
+    movie = Movie.objects.get(pk=movie_pk)
     user = request.user
     if user.favorite_movies.filter(pk=movie_pk).exists():
         user.favorite_movies.remove(movie)
@@ -109,10 +114,7 @@ def like_movie(request, movie_pk):
     else:
         user.favorite_movies.add(movie)
         result = 'add'
-    context = {
-        'message': result,
-    }
-    return Response(context)
+    return Response({'message': result})
 
 
 @api_view(['GET'])

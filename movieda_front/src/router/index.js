@@ -6,6 +6,10 @@ import MovieDetailView from '../views/movies/MovieDetailView.vue'
 import LoginView from '../views/accounts/LoginView.vue'
 import SignupView from '../views/accounts/SignupView.vue'
 
+import ArticleView from '../views/articles/ArticleView.vue'
+import ArticleDetailView from '../views/articles/ArticleDetailView.vue'
+import ArticleCreateView from '../views/articles/ArticleCreateView.vue'
+
 
 Vue.use(VueRouter)
 
@@ -29,6 +33,21 @@ Vue.use(VueRouter)
     path: '/signup',
     name: 'Signup',
     component: SignupView,
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: ArticleView,
+  },
+  {
+    path: '/community/:articleid',
+    name: 'ArticleDetail',
+    component: ArticleDetailView,
+  },
+  {
+    path: '/create',
+    name: 'ArticleCreateView',
+    component: ArticleCreateView,
   },
 ]
 

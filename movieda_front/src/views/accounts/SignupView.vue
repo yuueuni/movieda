@@ -13,7 +13,7 @@
       </div>
       <div class="input-block">
         <label for="password2" class="sr-only">password</label>
-        <input v-model="signupData.password2" id="password2" type="password" class="form-control" placeholder="Confirm Password" required>
+        <input @keypress.enter="signup" v-model="signupData.password2" id="password2" type="password" class="form-control" placeholder="Confirm Password" required>
       </div>
       <div>
         <button @click="signup" class="btn btn-primary btn-lg btn-block">Signup</button>

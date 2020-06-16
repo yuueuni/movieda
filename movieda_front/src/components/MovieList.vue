@@ -2,8 +2,8 @@
 	<div class="container">
     <h1 class="my-2">Recommendation Movies</h1>
     <div class="mx-3">
-      <div v-if="isHidden" class="row border mx-auto bg-dark rounded p-3">
-        <div class="my-1 mx-auto" v-for="rmovie in recommendMovie" :key="`rmovie_${rmovie.id}`">
+      <div v-if="isHidden" class="row border mx-auto bg-dark rounded p-3" >
+        <div class="my-1 mx-auto" v-for="rmovie in recommendMovie" :key="`re_${rmovie.id}`">
           <div class="card jhyuk-img text-white bg-dark border-dark" style="width: 12rem;">
             <img @click="onMovieSelect(rmovie)" :rmovie="rmovie" :src="rmovie.poster" class="card-img-top" alt="rmovie.title" height="300rem">
             <div class="m-2">
@@ -51,7 +51,7 @@
 			fetchMovies() {
 				axios.get(SERVER_URL + '/movies/')
 					.then(res => {
-						this.movieList = res.data.data
+						this.movieList = res.data
 					})
 			},
 			onMovieSelect(movie) {
@@ -67,9 +67,9 @@
               Authorization: `Token ${this.$cookies.get('auth-token')}`
             }
           }
-          axios.get(SERVER_URL + '/movies/', config)
+          axios.get(SERVER_URL + '/movies/recommendation/', config)
             .then(res => {
-              this.recommendMovie = res.data.recommend_movies
+              this.recommendMovie = res.data
             })
             this.isHidden = true
         }
