@@ -217,8 +217,8 @@ def scrap(request):
     if not request.user.is_staff:
        return redirect('movies:index')
     global TMDB_KEY, lang
-    page = 3
-    page_limit = 3
+    page = 4
+    page_limit = 4
     poster_base_url = 'https://image.tmdb.org/t/p/w500/'
 
     # Intro_준비물) Save Genre_obj & Create ko_genre_dict | id(num): name(hangul)
@@ -250,7 +250,8 @@ def scrap(request):
             try:
                 movie_id = tmp_movie['id']
                 title = tmp_movie['title']
-                summary = tmp_movie['overview'],
+                summary = tmp_movie['overview'][2:-2]
+                print(summary)
                 release_date = tmp_movie['release_date']
                 poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
 

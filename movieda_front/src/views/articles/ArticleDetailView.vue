@@ -6,7 +6,7 @@
         <h2 class="mb-2 text-left"><span class="badge badge-info">{{ article.movies }}</span></h2>
         <div class="d-flex justify-content-between align-items-end">
           <h1 class="text-left">{{ article.title }}</h1>
-          <p class="mb-0 text-right">{{ article.created_at }}</p>
+          <p class="mb-0 text-right">{{ article.formatted_created_at }}</p>
         </div>
       </div>
       <hr>
@@ -43,7 +43,10 @@ export default {
             this.isHidden = true
           }
         })
-        .catch(err => console.log(err))
+        .catch(() => {
+          this.$router.push({ name:'404Page' })
+        }
+      )
     },
     deleteArticle(articleid) {
 			const config = {

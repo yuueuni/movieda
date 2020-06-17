@@ -1,4 +1,4 @@
-# Final Project
+# Final Project :film_strip:
 
 ## 목표
 - 영화 정보 기반 추천 서비스
@@ -187,7 +187,7 @@
 
 
 
-#### 1-2. 좋아하는 배우/제작진/영화
+#### 1-2. 좋아하는 배우/제작진/영화 (제작진/영화 미구현)
 >### /movies/like_actor/\<int:actor_pk>/
 >- 로그인된 유저가 해당 배우를 좋아요 했다면 취소, 안했으면 좋아요
 >- add, remove 메시지 리턴
@@ -217,7 +217,7 @@
 
 ---
 
-### 2. 좋아요 기능 (미구현)
+### 2. 좋아요 기능
 - django 구현 or vue 구현
 - 장고 > 기존 좋아요 눌렀는지 유무  
 ~~- 뷰 > 어느 배우, 감독을 눌렀는지~~
@@ -293,24 +293,101 @@ Community,
 
 - [x] models & serializer 일부 수정
   - movie - release_date | DateTimeField => DateField
-  - serializer - review_detail |
+  - serializer - review_detail | read_only=True 적용
 - [x] views.py - scrap(영화 불러오기) fix
+  
   - api_scrap 중 consistency가 일치하지 않는 데이터 제외
 - [x] 
 
 ### Vue
-- [x]
-- [ ]
-- [ ]
+- [x] Movie - CSS적용
+    - Home | 추천영화(recommendMovie) 제공
+    - Detail | review부분 평점 choice_option으로 선택 가능
+    
+- [x] Accounts - Login, Signup | 인증실패시 알림메세지 제공
+
+    
 
 
 ## 2020.06.17
-~~- 관리자 유저~~
-~~- 코드정리~~
+
+### TodoList
+
+- 관리자 유저 - user.`is_staff`
+
+- 코드정리
+
 - Community
     ~~- 게시글 id (자동으로 1번으로) // 굳이 필요한가...?~~
     ~~- 게시글 밑에 코멘트작성 / pass~~
     ~~- 삭제~~
-    - 게시글 작성 시간(이쁘게)  > 1차 해결 > 후에
+    - ~~게시글 작성 시간(이쁘게)  > 1차 해결 > 완료
+- README 작성
+- 배포
+- 동영상제작
 
-- 리드미정리
+
+
+### Django
+
+- [x] 주석 및 코드 정리
+- [x] 관리자 유저 추가
+- [x] formatted_date 제공
+
+
+
+### Vue
+
+- [x] **공통 | 잘못된 경로 - 404page 추가**
+- [x] Community view 추가 | CRD
+  - ArticleListView
+    - ArticleView
+    - ArticleDetail
+    - ArticleCreate
+- [x] LikeMovie 기능 추가 
+  - 좋아요 영화 바탕으로 추천영화 제공
+
+
+
+---
+
+### 3. Django & Vue Update (latest 06.17)
+
+#### 3-1. 커뮤니티 홈
+
+>### /community/
+>
+>- 모든 게시글 보기
+>- 전체 article 데이터
+
+#### 3-2. 커뮤니티글 작성
+
+>### /create
+>
+>POST method. form data - title, content
+>
+>- 새로운 게시글 등록
+>- 로그인 필수
+
+#### 3-3. 게시글 디테일
+
+>### /community/\<int:article_pk>/
+>
+>- `GET` method : 게시글 자세히 보기 (+ 등록된 댓글)
+>- `PUT` method : 게시글 수정 (현재 로그인된 유저 == 게시글 등록 유저)
+>- `DELETE` method : 게시글 삭제 (현재 로그인된 유저 == 게시글 등록 유저)
+
+#### ※ 코멘트 - 기능에서 제외
+
+
+
+#### 3-4. 좋아요 기능 추가
+
+> ### /movies/like_movie/\<int:article_pk>/
+>
+> - user.favorite_movies 등록 여부에 따라 좋아요/좋아요 취소 가능
+
+---
+
+
+
