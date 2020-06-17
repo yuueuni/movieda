@@ -18,6 +18,7 @@
         </tr>
       </tbody>
     </table>
+    <p v-if="articles.length === 0" class="mt-3">아직 등록된 글이 없습니다.</p>
   </div>
 </template>
 
