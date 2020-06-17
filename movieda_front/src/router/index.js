@@ -10,6 +10,8 @@ import ArticleView from '../views/articles/ArticleView.vue'
 import ArticleDetailView from '../views/articles/ArticleDetailView.vue'
 import ArticleCreateView from '../views/articles/ArticleCreateView.vue'
 
+import NotFound from '../components/404.vue'
+
 
 Vue.use(VueRouter)
 
@@ -48,6 +50,11 @@ Vue.use(VueRouter)
     path: '/create',
     name: 'ArticleCreateView',
     component: ArticleCreateView,
+  },
+  {
+    path: '*',
+    name: '404Page',
+    component: NotFound,
   },
 ]
 

@@ -10,7 +10,7 @@ from .serializers import ArticleSerializer, ArticleDetailSerializer, CommentSeri
 
 @api_view(['GET'])
 def index(request):
-    articles = Article.objects.all()
+    articles = Article.objects.all().order_by('-id')
     serializer = ArticleSerializer(articles, many=True)
     return Response(serializer.data)
 
