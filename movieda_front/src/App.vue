@@ -44,7 +44,6 @@ export default {
     return {
       username: this.$cookies.get('username'),
       isLoggedIn: false,
-      errorMessage: false,
       selectedMovie: null,
     }
   },
@@ -77,7 +76,6 @@ export default {
         })
         .catch(() => {
           alert("입력 정보가 맞지 않습니다.")
-          this.errorMessage = "로그인 정보를 확인해주세요."
         })
     },
 

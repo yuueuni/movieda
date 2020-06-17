@@ -29,10 +29,8 @@ export default {
 			const review_URL = SERVER_URL + '/movies/' + movieID + '/get_review/'
 			axios.get(review_URL)
         .then(res => {
-					console.log(res);
 					const { data, avg_rank } = res.data
 					this.reviewList = data
-					console.log(data);
 					this.avgRank = avg_rank
         })
 		},
