@@ -28,6 +28,13 @@
       </nav>
     </div>
     <router-view @submit-login-data="login" @submit-signup-data="signup" />
+    
+    <footer class="footer font-small fixed-bottom" style="background:aliceblue">
+      <div class="footer-copyright text-center py-3">
+        <span>© 2020 Copyright </span>
+        <a href="https://github.com/yuueuni/movieda">MOVIEDA</a>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -114,5 +121,13 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #2c3e50;
+}
+
+.footer {
+  font-size: small;
+}
+
+.footer a {
+  color: rgb(63, 63, 63)
 }
 </style>

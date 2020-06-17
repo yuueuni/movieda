@@ -10,6 +10,8 @@ import ArticleView from '../views/articles/ArticleView.vue'
 import ArticleDetailView from '../views/articles/ArticleDetailView.vue'
 import ArticleCreateView from '../views/articles/ArticleCreateView.vue'
 
+import fetchMovie from '../views/fetchView/fetchMovieView.vue'
+
 import NotFound from '../components/404.vue'
 
 
@@ -55,6 +57,11 @@ Vue.use(VueRouter)
     path: '*',
     name: '404Page',
     component: NotFound,
+  },
+  {
+    path: '/fetch/:page/:pageCount',
+    name: 'fetchMovie',
+    component: fetchMovie,
   },
 ]
 
