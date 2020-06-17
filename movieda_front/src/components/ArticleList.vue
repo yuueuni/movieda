@@ -50,12 +50,11 @@ export default {
   mounted() {
     this.getArticle()
   }
-
 }
 </script>
 
 <style scoped>
-tr :hover {
+tr:hover {
   cursor: pointer;
 }
 </style>

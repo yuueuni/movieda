@@ -296,9 +296,19 @@ Community,
   - serializer - review_detail |
 - [x] views.py - scrap(영화 불러오기) fix
   - api_scrap 중 consistency가 일치하지 않는 데이터 제외
-- [ ]
+- [x] 
 
 ### Vue
 - [x]
 - [ ]
 - [ ]
+
+
+## 2020.06.17
+~~- 관리자 유저~~
+~~- 코드정리~~
+- 게시글 id (자동으로 1번으로)
+    - 게시글 밑에 코멘트작성 / 
+    - 삭제 > 에딧
+    - 게시글 작성 시간(이쁘게)  
+- 리드미정리

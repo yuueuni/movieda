@@ -70,39 +70,7 @@ def movie_detail(request, movie_pk):
     }
     return Response(context)
 
-# 배우, 감독, 영화 like
-@api_view(['GET'])
-def like_actor(request, actor_pk):
-    actor = Actor.objects.get(pk=actor_pk)
-    user = request.user
-    if user.favorite_actors.filter(pk=actor_pk).exists():
-        user.favorite_actors.remove(actor)
-        result = 'remove'
-    else:
-        user.favorite_actors.add(actor)
-        result = 'add'
-    context = {
-        'message': result,
-    }
-    return Response({'message': result})
-
-
-@api_view(['GET'])
-def like_director(request, director_pk):
-    director = Director.objects.get(pk=director_pk)
-    user = request.user
-    if user.favorite_directors.filter(pk=director_pk).exists():
-        user.favorite_directors.remove(director)
-        result = 'remove'
-    else:
-        user.favorite_directors.add(director)
-        result = 'add'
-    context = {
-        'message': result,
-    }
-    return Response({'message': result})
-
-
+# 영화 like
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def like_movie(request, movie_pk):
@@ -246,6 +214,8 @@ def get_runningtime(movie_id):
 
 
 def scrap(request):
+    if not request.user.is_staff:
+       return redirect('movies:index')
     global TMDB_KEY, lang
     page = 3
     page_limit = 3

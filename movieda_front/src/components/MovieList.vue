@@ -78,9 +78,7 @@
 		created() {
 			this.fetchMovies()
 		}
-
 	}
-
 </script>
 
 <style scoped>
