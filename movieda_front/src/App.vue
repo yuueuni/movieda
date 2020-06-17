@@ -40,13 +40,11 @@
 
 <script>
 import axios from 'axios'
-// import Home from './views/movies/Home.vue'
 
 const SERVER_URL = 'http://localhost:8000'
 
 export default {
   name: 'App',
-  // components: {Home},
   data() {
     return {
       username: this.$cookies.get('username'),

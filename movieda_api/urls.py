@@ -19,11 +19,11 @@ from movies import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profile/', include('accounts.urls')),
-    path('community/', include('community.urls')),
-    path('movies/', include('movies.urls')),
-
     path('', views.index),
+    path('profile/', include('accounts.urls')),
+
+    path('api/v1/community/', include('community.urls')),
+    path('api/v1/movies/', include('movies.urls')),
 
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),

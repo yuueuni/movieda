@@ -40,14 +40,14 @@
 import Review from '../../components/Review.vue'
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000'
+const SERVER_URL = 'http://localhost:8000/api/v1'
 
 export default {
 	name: "movieDetailView",
 	data() {
 		return {
       movie: null,
-      isHidden: false, // 안누른 상태
+      isHidden: false,
 		}
 	},
 	components:{

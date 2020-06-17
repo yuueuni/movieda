@@ -54,14 +54,14 @@ Vue.use(VueRouter)
     component: ArticleCreateView,
   },
   {
-    path: '*',
-    name: '404Page',
-    component: NotFound,
-  },
-  {
     path: '/fetch/:page/:pageCount',
     name: 'fetchMovie',
     component: fetchMovie,
+  },
+  {
+    path: '*',
+    name: '404Page',
+    component: NotFound,
   },
 ]
 
