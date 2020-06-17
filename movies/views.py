@@ -40,7 +40,8 @@ def recommendation(request):
         recommend_movie = random.choices(movies, k=5)
     else:
         favorite_genres = request.user.favorite_movies.values_list('genres', flat=True)
-        recommend_movie = Movie.objects.filter(genres__id__in=favorite_genres).distinct()[:5]
+        recommend_movies = Movie.objects.filter(genres__id__in=favorite_genres).distinct()
+        recommend_movie = random.choices(recommend_movies, k=5)
     recommend_serializer = MovieSerializer(recommend_movie, many=True)
     return Response(recommend_serializer.data)
 
@@ -212,13 +213,12 @@ def get_runningtime(movie_id):
     running_time = movie_detail_data['runtime']
     return running_time
 
-
-def scrap(request):
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def scrap(request, page, page_count):
     if not request.user.is_staff:
-       return redirect('movies:index')
+       return Response({'message':'no'})
     global TMDB_KEY, lang
-    page = 4
-    page_limit = 4
     poster_base_url = 'https://image.tmdb.org/t/p/w500/'
 
     # Intro_준비물) Save Genre_obj & Create ko_genre_dict | id(num): name(hangul)
@@ -239,7 +239,7 @@ def scrap(request):
 
     # 실제 코드
     # 1) 페이지 돌아가면서 받아오기
-    for p in range(page, page_limit + 1):
+    for p in range(page, page + page_count):
         current_page_movies = get_json_data(p)['results']
 
         # 2) movie를 순회하며 저장
@@ -247,62 +247,55 @@ def scrap(request):
             if not tmp_movie['overview']:
                 continue
 
-            try:
-                movie_id = tmp_movie['id']
-                title = tmp_movie['title']
-                summary = tmp_movie['overview'][2:-2]
-                print(summary)
-                release_date = tmp_movie['release_date']
-                poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
+            movie_id = tmp_movie['id']
+            title = tmp_movie['title']
+            summary = tmp_movie['overview']
+            release_date = tmp_movie['release_date']
+            poster_url = f'{poster_base_url}{tmp_movie["poster_path"]}'
 
-                # movie_detail => running_time 받아오기
-                running_time = get_runningtime(movie_id)
+            # movie_detail => running_time 받아오기
+            running_time = get_runningtime(movie_id)
 
-                # genre, actor, director 잠시 제외
-                movie_obj = Movie.objects.create(
-                    title=title,
-                    summary=summary,
-                    release_date=release_date,
-                    running_time=running_time,
-                    poster=poster_url,
-                )
-
-                # 이미 존재하는 영화는 추가되지 않음
-                # if Movie.objects.filter(title=title, release_date=release_date).exists():
-                #     continue
-
-                # movies.genres | ManyToMany add
-                genre_list = tmp_movie['genre_ids']
-
-                for genre_num in genre_list:
-                    ko_genre = ko_genres_dict[genre_num]
-                    ko_gen_obj = Genre.objects.get(genre_code=genre_num)
-                    movie_obj.genres.add(ko_gen_obj)
-
-                # movies.actors | ManyToMany add
-
-                # original_title => naver_search_api를 이용하여 get_actor_and_director로 넘기기,
-                original_title = tmp_movie['original_title']
-                credit_data = get_actors_and_directors(movie_id, original_title)
-                for cast_name in credit_data['actor_list']:
-                    if Actor.objects.filter(actor=cast_name).exists():
-                        tmp_actor = Actor.objects.get(actor=cast_name)
-                    else:
-                        tmp_actor = Actor.objects.create(actor=cast_name)
-                        tmp_actor.save()
-                    movie_obj.actors.add(tmp_actor)
-
-                # movies.directors | ManyToMany add
-                for director_name in credit_data['director_list']:
-                    if Director.objects.filter(director=director_name).exists():
-                        tmp_director = Director.objects.get(director=director_name)
-                    else:
-                        tmp_director = Director.objects.create(director=director_name)
-                        tmp_director.save()
-                    movie_obj.directors.add(tmp_director)
-            except:
+            # 이미 존재하는 영화는 추가되지 않음
+            if Movie.objects.all().filter(title=title, release_date=release_date).exists():
                 continue
-            else:
-                movie_obj.save()
 
-    return redirect('movies:index')
+            # genre, actor, director 잠시 제외
+            movie_obj = Movie.objects.create(
+                title=title,
+                summary=summary,
+                release_date=release_date,
+                running_time=running_time,
+                poster=poster_url,
+            )
+
+            # movies.genres | ManyToMany add
+            genre_list = tmp_movie['genre_ids']
+
+            for genre_num in genre_list:
+                ko_genre = ko_genres_dict[genre_num]
+                ko_gen_obj = Genre.objects.get(genre_code=genre_num)
+                movie_obj.genres.add(ko_gen_obj)
+
+            # movies.actors | ManyToMany add
+
+            # original_title => naver_search_api를 이용하여 get_actor_and_director로 넘기기,
+            original_title = tmp_movie['original_title']
+            credit_data = get_actors_and_directors(movie_id, original_title)
+            for cast_name in credit_data['actor_list']:
+                if Actor.objects.filter(actor=cast_name).exists():
+                    tmp_actor = Actor.objects.get(actor=cast_name)
+                else:
+                    tmp_actor = Actor.objects.create(actor=cast_name)
+                    tmp_actor.save()
+                movie_obj.actors.add(tmp_actor)
+
+            # movies.directors | ManyToMany add
+            for director_name in credit_data['director_list']:
+                if Director.objects.filter(director=director_name).exists():
+                    tmp_director = Director.objects.get(director=director_name)
+                else:
+                    tmp_director = Director.objects.create(director=director_name)
+                    tmp_director.save()
+                movie_obj.directors.add(tmp_director)
+    return Response({'message': 'success'})
