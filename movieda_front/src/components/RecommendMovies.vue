@@ -20,7 +20,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'RecommendMovies',
@@ -41,7 +41,7 @@ export default {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(SERVER_URL + '/movies/recommendation/', config)
+        axios.get(SERVER_URL + '/api/v1/movies/recommendation/', config)
           .then(res => {
             this.recommendMovie = res.data
           })

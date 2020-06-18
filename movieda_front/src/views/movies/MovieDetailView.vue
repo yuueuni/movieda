@@ -40,7 +40,7 @@
 import Review from '../../components/Review.vue'
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
 	name: "movieDetailView",
@@ -61,7 +61,7 @@ export default {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(SERVER_URL + '/movies/' + movieID, config)
+        axios.get(SERVER_URL + '/api/v1/movies/' + movieID, config)
           .then(res => {
             this.movie = res.data.data
             if (res.data.message === 'yes') {
@@ -72,7 +72,7 @@ export default {
           })
           .catch(err => console.error(err))
       } else {
-        axios.get(SERVER_URL + '/movies/' + movieID)
+        axios.get(SERVER_URL + '/api/v1/movies/' + movieID)
           .then(res => {
             this.movie = res.data.data
           })
@@ -85,7 +85,7 @@ export default {
           Authorization: `Token ${this.$cookies.get('auth-token')}`
         }
       }
-      const likeURL = SERVER_URL + '/movies/like_movie/' + movieID
+      const likeURL = SERVER_URL + '/api/v1/movies/like_movie/' + movieID
       axios.get(likeURL, config)
         .then(res => {
           if (res.data.message === 'add') {

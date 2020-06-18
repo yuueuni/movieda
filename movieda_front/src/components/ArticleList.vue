@@ -25,7 +25,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'ArticleList',
@@ -39,7 +39,7 @@ export default {
       this.$router.push(`/community/${article.id}`)
     },
     getArticle() {
-      axios.get(SERVER_URL + '/community/')
+      axios.get(SERVER_URL + '/api/v1/community/')
         .then(res => {
           this.articles = res.data
         })

@@ -10,7 +10,7 @@ import ReviewList from './ReviewList'
 import ReviewInput from './ReviewInput'
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
 	name: 'Review',
@@ -26,7 +26,7 @@ export default {
 	methods: {
 		getReviews() {
 			const movieID = this.$route.params.movieid
-			const review_URL = SERVER_URL + '/movies/' + movieID + '/get_review/'
+			const review_URL = SERVER_URL + '/api/v1/movies/' + movieID + '/get_review/'
 			axios.get(review_URL)
         .then(res => {
 					const { data, avg_rank } = res.data
@@ -40,7 +40,7 @@ export default {
 					Authorization: `Token ${this.$cookies.get('auth-token')}`
 				}
 			}
-			const createReview_URL = SERVER_URL + '/movies/' + this.$route.params.movieid + '/create_review/'
+			const createReview_URL = SERVER_URL + '/api/v1/movies/' + this.$route.params.movieid + '/create_review/'
 			this.reviewValue = reviewData
 			axios.post(createReview_URL , this.reviewValue, config)
 				.then(res => {
@@ -59,7 +59,7 @@ export default {
 					Authorization: `Token ${this.$cookies.get('auth-token')}`
 				}
 			}
-			const deleteReview_URL = SERVER_URL + '/movies/' + this.$route.params.movieid + '/delete_review/' + review_pk
+			const deleteReview_URL = SERVER_URL + '/api/v1/movies/' + this.$route.params.movieid + '/delete_review/' + review_pk
 			axios.post(deleteReview_URL, review_pk, config)
 		},
 	},

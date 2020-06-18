@@ -22,8 +22,7 @@
 
 <script>
 import axios from 'axios'
-
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'ArticleDetail',
@@ -35,7 +34,7 @@ export default {
   },
   methods: {
     getArticle(articleID) {
-      axios.get(SERVER_URL + '/community/' + articleID)
+      axios.get(SERVER_URL + '/api/v1/community/' + articleID)
         .then(res => {
           this.article = res.data
           const currnetUSER = this.$cookies.get('username')
@@ -54,7 +53,7 @@ export default {
 					Authorization: `Token ${this.$cookies.get('auth-token')}`
 				}
       }
-      const deleteArticleURL = SERVER_URL + '/community/' + articleid
+      const deleteArticleURL = SERVER_URL + '/api/v1/community/' + articleid
       axios.delete(deleteArticleURL, config)
       this.$router.push(`/community/`)
     }

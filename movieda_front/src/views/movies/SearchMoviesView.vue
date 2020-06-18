@@ -18,8 +18,7 @@
 
 <script>
 import axios from 'axios'
-
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'searchMovies',
@@ -33,7 +32,7 @@ export default {
   },
   methods: {
     searchMovie() {
-      const searchURL = SERVER_URL + '/movies/search/'
+      const searchURL = SERVER_URL + '/api/v1/movies/search/'
       axios.post(searchURL, this.searchData)
       .then(res => {
         this.searchMovies = res.data

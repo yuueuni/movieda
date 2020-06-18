@@ -44,8 +44,7 @@
 
 <script>
 import axios from 'axios'
-
-const SERVER_URL = 'http://localhost:8000'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'App',

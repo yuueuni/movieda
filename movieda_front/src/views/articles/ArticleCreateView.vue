@@ -24,8 +24,8 @@
 
 <script>
 import axios from 'axios'
+import SERVER_URL from '@/env.js'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
 
 export default {
   name: 'ArticleCreate',
@@ -45,7 +45,7 @@ export default {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
         }
-      const createArticleURL = SERVER_URL + '/community/create/'
+      const createArticleURL = SERVER_URL + '/api/v1/community/create/'
       axios.post(createArticleURL, this.articleData, config)
       .then(res => {
         this.$router.push(`/community`)

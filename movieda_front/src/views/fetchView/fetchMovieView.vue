@@ -6,7 +6,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8000/api/v1'
+import SERVER_URL from '@/env.js'
 
 export default {
   name: 'fetch',
@@ -17,7 +17,7 @@ export default {
           Authorization: `Token ${this.$cookies.get('auth-token')}`
         }
       }
-      axios.get(SERVER_URL + '/movies/scrap/' + page + '/' + pageCount + '/', config)
+      axios.get(SERVER_URL + '/api/v1/movies/scrap/' + page + '/' + pageCount + '/', config)
         .then(res => {
           if (res.data.message === 'success') {
             this.$router.push('/')
