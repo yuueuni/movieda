@@ -76,7 +76,9 @@ export default {
     },
 
     login(loginData) {
-      axios.post('/rest-auth/login/', loginData)
+      const loginURL = `${SERVER_URL}/rest-auth/login/`
+      console.log(loginURL)
+      axios.post(loginURL, loginData)
         .then(res => {
           this.setCookie(res.data.key, loginData)
           this.isLoggedIn = true
