@@ -66,7 +66,7 @@ export default {
     },
 
     signup(signupData){
-      axios.post('/rest-auth/registration/', signupData)
+      axios.post('/api/rest-auth/registration/', signupData)
         .then(res => {
           this.setCookie(res.data.key, signupData)
           this.$router.push({ name: 'Home' })
@@ -76,7 +76,7 @@ export default {
     },
 
     login(loginData) {
-      const loginURL = `${SERVER_URL}/rest-auth/login/`
+      const loginURL = `/api/rest-auth/login/`
       console.log(loginURL)
       axios.post(loginURL, loginData)
         .then(res => {
@@ -91,7 +91,7 @@ export default {
     },
 
     logout() {
-      axios.get('/rest-auth/logout/')
+      axios.get('/api/rest-auth/logout/')
         .then(() => {
           this.$cookies.remove('auth-token')
           this.$cookies.remove('username')
