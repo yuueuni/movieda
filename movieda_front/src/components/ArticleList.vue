@@ -25,7 +25,7 @@
 <script>
 import axios from 'axios'
 
-import SERVER_URL from '@/env.js'
+
 
 export default {
   name: 'ArticleList',

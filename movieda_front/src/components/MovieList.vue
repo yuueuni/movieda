@@ -22,7 +22,7 @@
   import axios from 'axios'
   import RecommendMovies from './RecommendMovies.vue'
 
-	import SERVER_URL from '@/env.js'
+	
 
 	export default {
 		name: 'MovieList',
@@ -36,7 +36,6 @@
 		},
 		methods: {
 			fetchMovies() {
-        console.log(SERVER_URL)
 				axios.get('/api/v1/movies/')
 					.then(res => {
 						this.movieList = res.data
