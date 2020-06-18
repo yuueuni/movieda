@@ -66,7 +66,7 @@ export default {
     },
 
     signup(signupData){
-      axios.post(SERVER_URL + '/rest-auth/registration/', signupData)
+      axios.post('/rest-auth/registration/', signupData)
         .then(res => {
           this.setCookie(res.data.key, signupData)
           this.$router.push({ name: 'Home' })
@@ -76,7 +76,7 @@ export default {
     },
 
     login(loginData) {
-      axios.post(SERVER_URL + '/rest-auth/login/', loginData)
+      axios.post('/rest-auth/login/', loginData)
         .then(res => {
           this.setCookie(res.data.key, loginData)
           this.isLoggedIn = true
@@ -89,7 +89,7 @@ export default {
     },
 
     logout() {
-      axios.get(SERVER_URL + '/rest-auth/logout/')
+      axios.get('/rest-auth/logout/')
         .then(() => {
           this.$cookies.remove('auth-token')
           this.$cookies.remove('username')

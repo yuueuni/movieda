@@ -45,7 +45,7 @@ export default {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
         }
-      const createArticleURL = SERVER_URL + '/api/v1/community/create/'
+      const createArticleURL =  '/api/v1/community/create/'
       axios.post(createArticleURL, this.articleData, config)
       .then(res => {
         this.$router.push(`/community`)

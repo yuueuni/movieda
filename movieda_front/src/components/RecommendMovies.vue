@@ -41,7 +41,7 @@ export default {
             Authorization: `Token ${this.$cookies.get('auth-token')}`
           }
         }
-        axios.get(SERVER_URL + '/api/v1/movies/recommendation/', config)
+        axios.get('/api/v1/movies/recommendation/', config)
           .then(res => {
             this.recommendMovie = res.data
           })

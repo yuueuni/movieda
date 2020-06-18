@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     searchMovie() {
-      const searchURL = SERVER_URL + '/api/v1/movies/search/'
+      const searchURL = '/api/v1/movies/search/'
       axios.post(searchURL, this.searchData)
       .then(res => {
         this.searchMovies = res.data

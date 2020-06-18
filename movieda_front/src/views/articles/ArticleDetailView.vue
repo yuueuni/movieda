@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     getArticle(articleID) {
-      axios.get(SERVER_URL + '/api/v1/community/' + articleID)
+      axios.get('/api/v1/community/' + articleID)
         .then(res => {
           this.article = res.data
           const currnetUSER = this.$cookies.get('username')
@@ -53,7 +53,7 @@ export default {
 					Authorization: `Token ${this.$cookies.get('auth-token')}`
 				}
       }
-      const deleteArticleURL = SERVER_URL + '/api/v1/community/' + articleid
+      const deleteArticleURL =  '/api/v1/community/' + articleid
       axios.delete(deleteArticleURL, config)
       this.$router.push(`/community/`)
     }

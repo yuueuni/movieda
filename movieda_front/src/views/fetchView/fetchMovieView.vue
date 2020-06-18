@@ -17,7 +17,7 @@ export default {
           Authorization: `Token ${this.$cookies.get('auth-token')}`
         }
       }
-      axios.get(SERVER_URL + '/api/v1/movies/scrap/' + page + '/' + pageCount + '/', config)
+      axios.get('/api/v1/movies/scrap/' + page + '/' + pageCount + '/', config)
         .then(res => {
           if (res.data.message === 'success') {
             this.$router.push('/')

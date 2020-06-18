@@ -37,7 +37,7 @@
 		methods: {
 			fetchMovies() {
         console.log(SERVER_URL)
-				axios.get(SERVER_URL + '/api/v1/movies/')
+				axios.get('/api/v1/movies/')
 					.then(res => {
 						this.movieList = res.data
 					})

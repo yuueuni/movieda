@@ -39,7 +39,7 @@ export default {
       this.$router.push(`/community/${article.id}`)
     },
     getArticle() {
-      axios.get(SERVER_URL + '/api/v1/community/')
+      axios.get('/api/v1/community/')
         .then(res => {
           this.articles = res.data
         })
