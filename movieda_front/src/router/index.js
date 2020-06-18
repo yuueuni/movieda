@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/movies/Home.vue'
+
 import MovieDetailView from '../views/movies/MovieDetailView.vue'
+import SearchMovies from '../views/movies/SearchMoviesView.vue'
 
 import LoginView from '../views/accounts/LoginView.vue'
 import SignupView from '../views/accounts/SignupView.vue'
@@ -22,6 +24,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/search/:keyword',
+    name: 'SearchMovies',
+    component: SearchMovies
   },
   {
     path: '/movie/:movieid',

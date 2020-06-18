@@ -5,7 +5,7 @@
     </div> -->
     <h1 class="mt-3 mb-0">Community</h1>
     <div class="text-right mb-2 notext">
-      <button class="btn btn-outline-secondary ml-0"><router-link to="/create"><span class="notext">글 작성</span></router-link></button>
+      <router-link to="/create"><button class="btn btn-outline-secondary ml-0"><span class="notext">글 작성</span></button></router-link>
     </div>
     <ArticleList />
   </div>

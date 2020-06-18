@@ -7,7 +7,7 @@
 			<option value="7">7</option><option value="8">8</option>
 			<option value="9">9</option><option value="10">10</option>
 		</select>
-		<input v-model="reviewData.content" type="text" class="w-50 form-control" placeholder="리뷰를 입력해주세요."/>
+		<input @keypress.enter="createReview" v-model="reviewData.content" type="text" class="w-50 form-control" placeholder="리뷰를 입력해주세요."/>
 		<div class="input-group-append">
 			<button @click="createReview" type="submit" class="btn btn-outline-secondary">댓글 입력</button>
 		</div>

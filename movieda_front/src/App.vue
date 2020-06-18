@@ -24,6 +24,10 @@
               <a class="nav-link"><router-link to="/community">Community</router-link></a>
             </li>
           </ul>
+          <div class="form-inline my-2 my-lg-0">
+            <input v-model="keyword" id="keyword" @keypress.enter="searchKeyword(keyword)" class="form-control mr-sm-2" type="search" placeholder="Search">
+            <button @click="searchKeyword(keyword)" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+          </div>
         </div>
       </nav>
     </div>
@@ -50,6 +54,7 @@ export default {
       username: this.$cookies.get('username'),
       isLoggedIn: false,
       selectedMovie: null,
+      keyword: null,
     }
   },
   
@@ -94,8 +99,10 @@ export default {
         })
         .catch(err => console.log(err.response))
     },
+    searchKeyword(keyword) {
+      this.$router.push(`/search/${keyword}`)
+    }
   },
-
   mounted() {
     this.isLoggedIn = this.$cookies.isKey('auth-token')
   }
